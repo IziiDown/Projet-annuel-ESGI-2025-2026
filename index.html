@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'" />
+    <title>Procrastop - Reprenez le contrôle de votre temps</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- ÉCRAN D'ACCUEIL -->
+        <section id="home-screen" class="screen active">
+            <div class="logo-container">
+                <div class="logo-glow"></div>
+                <h1 class="logo-title">Procrastop</h1>
+            </div>
+            <p class="subtitle">Trouvez les sites qui vous font perdre votre temps et bloquez-les temporairement pour
+                rester productif.</p>
+            <button id="btn-commencer" class="commencer">Commencer</button>
+        </section>
+
+        <!-- ÉCRAN DE RÉGLAGES -->
+        <section id="settings-screen" class="screen hidden">
+            <header class="settings-header">
+                <h2>Réglages de Focus</h2>
+                <p>Configurez votre session de travail</p>
+            </header>
+
+            <div class="settings-grid">
+                <!-- Colonne Gauche: Sites Bloqués -->
+                <div class="settings-card card-sites">
+                    <h3>Sites à bloquer</h3>
+                    <div class="add-site-form">
+                        <input type="text" id="input-site" placeholder="ex: youtube.com" aria-label="Ajouter un site" />
+                        <button id="btn-add-site" class="btn-add" aria-label="Ajouter">Ajouter</button>
+                    </div>
+                    <div id="blocked-sites-list" class="tags-container">
+                        <!-- Les tags seront insérés par JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Colonne Droite: Minuteurs & Mode -->
+                <div class="settings-card card-controls">
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Temps de concentration</span>
+                            <span id="focus-time-val" class="badge">25 min</span>
+                        </div>
+                        <input type="range" id="slider-focus-time" min="5" max="120" value="25" step="5" class="slider">
+                    </div>
+
+                    <div class="control-group">
+                        <div class="slider-header">
+                            <span>Temps de pause</span>
+                            <span id="break-time-val" class="badge">5 min</span>
+                        </div>
+                        <input type="range" id="slider-break-time" min="1" max="30" value="5" step="1" class="slider">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="group-label">Niveau de blocage</label>
+                        <div class="level-selector">
+                            <label class="level-option">
+                                <input type="radio" name="strict-level" value="cool" checked>
+                                <div class="level-card cool">
+                                    <span class="level-title">Cool</span>
+                                    <span class="level-desc">Timer annulable</span>
+                                </div>
+                            </label>
+                            <label class="level-option">
+                                <input type="radio" name="strict-level" value="normal">
+                                <div class="level-card normal">
+                                    <span class="level-title">Équilibré</span>
+                                    <span class="level-desc">Pause limitée</span>
+                                </div>
+                            </label>
+                            <label class="level-option">
+                                <input type="radio" name="strict-level" value="hardcore">
+                                <div class="level-card hardcore">
+                                    <span class="level-title">Hardcore</span>
+                                    <span class="level-desc">Inarrêtable !</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="toggle-group">
+                        <label class="toggle-control">
+                            <span class="toggle-label">Notifications de fin</span>
+                            <input type="checkbox" id="toggle-notifications" checked>
+                            <span class="control-indicator"></span>
+                        </label>
+                        <label class="toggle-control">
+                            <span class="toggle-label">Sons d'alerte</span>
+                            <input type="checkbox" id="toggle-sounds" checked>
+                            <span class="control-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="settings-actions">
+                <button id="btn-back" class="btn-secondary">Retour</button>
+                <button id="btn-save" class="btn-primary">Lancer le blocage</button>
+            </footer>
+        </section>
+
+        <!-- ÉCRAN SESSION EN COURS -->
+        <section id="session-screen" class="screen hidden">
+            <div class="session-card">
+                <div class="session-status" id="session-status-text">Session de Concentration</div>
+                <div class="timer-display" id="timer-display">25:00</div>
+                <p class="session-message" id="session-message-text">Vos distractions sont bloquées. Restez concentré !
+                </p>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="session-progress"></div>
+                </div>
+
+                <div class="session-actions">
+                    <button id="btn-skip-pause" class="btn-secondary hidden">Passer la pause</button>
+                    <button id="btn-stop-session" class="btn-danger">Abandonner</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>
