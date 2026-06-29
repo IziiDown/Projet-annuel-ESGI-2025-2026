@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Procrastop Popup</title>
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --bg-card: rgba(20, 20, 30, 0.6);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.2);
+      --success: #10b981;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #12102e 0%, var(--bg-dark) 100%);
+      font-family: var(--font-family);
+      color: var(--text-main);
+      margin: 0;
+      width: 320px;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 12px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 50%, #6366f1 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status-badge.connected {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+    }
+
+    .status-badge.disconnected {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .connected .status-dot {
+      background-color: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .disconnected .status-dot {
+      background-color: var(--danger);
+      box-shadow: 0 0 8px var(--danger);
+    }
+
+    .content-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .state-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .timer {
+      font-size: 40px;
+      font-weight: 800;
+      text-shadow: 0 0 16px rgba(99, 102, 241, 0.35);
+      margin: 5px 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .info-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .sites-section {
+      margin-top: 15px;
+    }
+
+    .sites-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin: 0 0 8px 0;
+      text-align: left;
+    }
+
+    .sites-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-height: 80px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .sites-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sites-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+    }
+
+    .site-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="logo">Procrastop</span>
+    <div id="status-badge" class="status-badge disconnected">
+      <span class="status-dot"></span>
+      <span id="status-text">Déconnecté</span>
+    </div>
+  </div>
+
+  <div class="content-box">
+    <!-- State: Disconnected -->
+    <div id="view-disconnected" class="state-view">
+      <p class="info-text">Lancez l'application de bureau <strong>Procrastop</strong> pour synchroniser le blocage.</p>
+    </div>
+
+    <!-- State: Connected but Idle -->
+    <div id="view-idle" class="state-view hidden">
+      <p class="state-title" style="color: var(--success);">Prêt</p>
+      <p class="info-text">Aucune session active. Démarrez une session de focus dans l'application.</p>
+    </div>
+
+    <!-- State: Connected and Active -->
+    <div id="view-active" class="state-view hidden">
+      <p id="focus-mode-label" class="state-title" style="color: #a5b4fc;">Session Focus</p>
+      <div class="timer" id="timer-display">25:00</div>
+      <p class="info-text" id="active-message">Vos distractions sont bloquées.</p>
+    </div>
+  </div>
+
+  <div class="sites-section" id="sites-section">
+    <h3 class="sites-title">Sites sur liste noire :</h3>
+    <div class="sites-list" id="sites-list">
+      <!-- Site tags populated dynamically -->
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

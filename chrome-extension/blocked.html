@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Procrastop - Site Bloqué</title>
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --bg-card: rgba(20, 20, 30, 0.6);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #12102e 0%, var(--bg-dark) 100%);
+      font-family: var(--font-family);
+      color: var(--text-main);
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: -30px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      z-index: 1;
+      filter: blur(15px);
+      pointer-events: none;
+      animation: pulse 4s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.1); opacity: 0.9; }
+    }
+
+    .title {
+      font-size: 36px;
+      font-weight: 800;
+      margin: 0;
+      background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 50%, #6366f1 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .highlight {
+      color: #a5b4fc;
+      font-weight: 600;
+    }
+
+    .timer-display {
+      font-size: 72px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 24px rgba(99, 102, 241, 0.35);
+      margin: 10px 0;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary) 0%, #a5b4fc 100%);
+      border-radius: 3px;
+      transition: width 1s linear;
+    }
+
+    .quote-box {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 20px;
+      width: 100%;
+      min-height: 60px;
+    }
+
+    .quote {
+      font-size: 13px;
+      font-style: italic;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin: 0 0 5px 0;
+    }
+
+    .quote-author {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6366f1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    .btn-back {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+      transition: all 0.2s;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .btn-back:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-glow"></div>
+    <div class="card">
+      <h1 class="title">Procrastop</h1>
+      <p class="subtitle">Le site <span id="site-name" class="highlight">distraction</span> est bloqué pour vous aider à rester concentré.</p>
+      
+      <div id="timer-section">
+        <div class="timer-display" id="timer-display">--:--</div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="quote-box">
+        <p class="quote" id="quote-text">"La concentration est le secret de la force."</p>
+        <p class="quote-author" id="quote-author">Ralph Waldo Emerson</p>
+      </div>
+
+      <button class="btn-back" id="btn-history-back">Retourner au travail</button>
+    </div>
+  </div>
+  <script src="blocked.js"></script>
+</body>
+</html>

@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron');
+
 // LISTE PAR DÉFAUT DES SITES BLOQUÉS
 let blockedSites = ['facebook.com', 'youtube.com', 'twitter.com', 'instagram.com', 'tiktok.com', 'netflix.com'];
 
@@ -33,6 +35,20 @@ let totalDuration = 0;
 let currentMode = 'focus'; // 'focus' | 'break'
 let strictLevel = 'cool'; // 'cool' | 'normal' | 'hardcore'
 
+// Fonction pour notifier le processus principal de l'état actuel
+function updateBackendState() {
+    if (typeof ipcRenderer !== 'undefined') {
+        ipcRenderer.send('update-state', {
+            blockedSites: blockedSites,
+            isActive: (timerInterval !== null && currentMode === 'focus'),
+            mode: currentMode,
+            timeLeft: timeLeft,
+            totalDuration: totalDuration,
+            strictLevel: strictLevel
+        });
+    }
+}
+
 // --- INITIALISATION ---
 document.addEventListener('DOMContentLoaded', () => {
     // Demander la permission de notification au démarrage
@@ -42,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     renderBlockedSites();
     setupEventListeners();
+    updateBackendState();
 });
 
 // --- ENREGISTREMENT DES ÉVÉNEMENTS ---
@@ -112,6 +129,7 @@ function renderBlockedSites() {
         
         blockedSitesList.appendChild(tag);
     });
+    updateBackendState();
 }
 
 function handleAddSite() {
@@ -201,10 +219,13 @@ function updateSessionUI() {
         sessionStatusText.style.color = "#34d399";
         sessionMessageText.textContent = "Détendez-vous les yeux, étirez-vous et buvez de l'eau.";
     }
+
+    updateBackendState();
 }
 
 function handleTimerEnd() {
     clearInterval(timerInterval);
+    timerInterval = null;
     playAlertSound();
 
     if (currentMode === 'focus') {
@@ -228,6 +249,7 @@ function handleTimerEnd() {
     } else {
         // La pause est finie -> Retour aux réglages
         showNotification("La pause est finie !", "Prêt pour une nouvelle session de focus ?");
+        updateBackendState();
         switchScreen(sessionScreen, settingsScreen);
     }
 }
@@ -244,11 +266,15 @@ function stopSession() {
     }
 
     clearInterval(timerInterval);
+    timerInterval = null;
+    updateBackendState();
     switchScreen(sessionScreen, settingsScreen);
 }
 
 function skipPause() {
     clearInterval(timerInterval);
+    timerInterval = null;
+    updateBackendState();
     // On revient à l'écran de réglages après la fin de la session globale
     switchScreen(sessionScreen, settingsScreen);
 }
