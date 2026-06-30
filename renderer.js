@@ -136,6 +136,13 @@ function setupEventListeners() {
                     loggedInUser = res.user.username;
                     blockedSites = res.user.blockedWebsites || [];
                     blockedPrograms = res.user.blockedPrograms || [];
+                    
+                    // Charger les temps de focus et de pause depuis la base
+                    sliderFocusTime.value = res.user.focusTime || 25;
+                    sliderBreakTime.value = res.user.breakTime || 5;
+                    focusTimeVal.textContent = `${sliderFocusTime.value} min`;
+                    breakTimeVal.textContent = `${sliderBreakTime.value} min`;
+                    
                     renderBlockedSites();
                     renderBlockedPrograms();
                     
@@ -186,6 +193,15 @@ function setupEventListeners() {
 
     sliderBreakTime.addEventListener('input', (e) => {
         breakTimeVal.textContent = `${e.target.value} min`;
+    });
+
+    // Enregistrement en base de données quand la valeur change définitivement
+    sliderFocusTime.addEventListener('change', () => {
+        saveTimeSettings();
+    });
+
+    sliderBreakTime.addEventListener('change', () => {
+        saveTimeSettings();
     });
 
     // Ajout de site internet
@@ -336,6 +352,14 @@ function removeProgram(index) {
     // Sauvegarde en base de données si connecté
     if (loggedInUser && window.api) {
         window.api.updateBlockedPrograms(loggedInUser, blockedPrograms);
+    }
+}
+
+function saveTimeSettings() {
+    if (loggedInUser && window.api && window.api.updateFocusSettings) {
+        const focusVal = parseInt(sliderFocusTime.value, 10);
+        const breakVal = parseInt(sliderBreakTime.value, 10);
+        window.api.updateFocusSettings(loggedInUser, focusVal, breakVal);
     }
 }
 

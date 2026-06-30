@@ -147,7 +147,7 @@ ipcMain.handle('auth:login', async (event, username, password) => {
             return { success: false, message: 'Mot de passe incorrect.' };
         }
         
-        return { success: true, user: { username: user.username, blockedWebsites: user.blockedWebsites || [], blockedPrograms: user.blockedPrograms || [] } };
+        return { success: true, user: { username: user.username, blockedWebsites: user.blockedWebsites || [], blockedPrograms: user.blockedPrograms || [], focusTime: user.focusTime ?? 25, breakTime: user.breakTime ?? 5 } };
     } catch (error) {
         return { success: false, message: error.toString() };
     }
@@ -193,6 +193,16 @@ ipcMain.handle('user:updateBlockedPrograms', async (event, username, blockedProg
         // Synchroniser également avec l'état en mémoire
         currentAppState.blockedPrograms = blockedPrograms;
         broadcastState();
+        return { success: true };
+    } catch (error) {
+        return { success: false, message: error.toString() };
+    }
+});
+
+// Mettre à jour les réglages de temps de focus et pause
+ipcMain.handle('user:updateFocusSettings', async (event, username, focusTime, breakTime) => {
+    try {
+        await User.updateOne({ username }, { focusTime: focusTime, breakTime: breakTime });
         return { success: true };
     } catch (error) {
         return { success: false, message: error.toString() };

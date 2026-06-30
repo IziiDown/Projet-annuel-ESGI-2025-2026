@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld('api', {
     getBlockedPrograms: (username) => ipcRenderer.invoke('user:getBlockedPrograms', username),
     updateBlockedPrograms: (username, blockedPrograms) => ipcRenderer.invoke('user:updateBlockedPrograms', username, blockedPrograms),
     
+    // Réglages du minuteur (temps de focus/pause)
+    updateFocusSettings: (username, focusTime, breakTime) => ipcRenderer.invoke('user:updateFocusSettings', username, focusTime, breakTime),
+    
     // Notification de l'état (WebSocket)
     updateState: (state) => ipcRenderer.send('update-state', state)
 });

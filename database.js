@@ -19,7 +19,15 @@ const userSchema = new mongoose.Schema({
   blockedWebsites: [{
     type: String,
     trim: true
-  }]
+  }],
+  focusTime: {
+    type: Number,
+    default: 25
+  },
+  breakTime: {
+    type: Number,
+    default: 5
+  }
 }, {
   timestamps: true // Ajoute createdAt et updatedAt automatiquement
 });
